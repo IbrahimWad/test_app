@@ -13,16 +13,24 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      theme: ThemeData(
+        fontFamily: 'Bahij', // Set the default font family
+        textTheme: TextTheme(
+          bodyLarge:
+              TextStyle(fontFamily: 'Bahij'), // Apply 'Bahij' to bodyText1
+          bodyMedium:
+              TextStyle(fontFamily: 'Bahij'), // Apply 'Bahij' to bodyText2
+          // Define other text styles if needed
+        ),
+      ),
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       initialBinding: Binding(),
       home: const HomeScreen(),
       locale: const Locale('ar'),
-      //  home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }

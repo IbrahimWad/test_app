@@ -10,31 +10,28 @@ class CategoryComponents extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get the instance of HomeController using GetX
+    // Get the instance of CategoryController using GetX
     final HomeController controller = Get.put(sl<HomeController>());
 
     return Obx(() {
-      // Ensure selectedType is of type int
-      int selectedType = controller.selectedType.value; // Default to 0 if null
-
+      print(
+          'CategoryComponents build, selectedType: ${controller.selectedType}');
       return SizedBox(
-        height: 50,
+        height: 40,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: controller.categories.length,
           itemBuilder: (context, index) {
-            // Check if the current index is the selected type
-            bool isSelected = index + 1 == selectedType;
+            final category = controller.categories[index];
+            final bool isSelected = index + 1 == controller.selectedType;
 
-            return TypeMethod(
-              name: controller.categories[index].name,
-              color: isSelected ? Colors.white : AppColors.secondTextColor,
-              containerColor:
-                  isSelected ? AppColors.textColor : Colors.transparent,
-              onTap: () {
-                // Call the focusType method to update the selected category
-                controller.focusType(index + 1);
-              },
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6),
+              child: _buildCategoryButton(
+                category.name,
+                isSelected,
+                () => controller.selectCategory(index + 1),
+              ),
             );
           },
         ),
@@ -42,36 +39,59 @@ class CategoryComponents extends StatelessWidget {
     });
   }
 
-  // Widget to display each category button
-  Widget TypeMethod({
-    required String name,
-    required Color color,
-    required Color containerColor,
-    required VoidCallback? onTap,
-  }) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 5),
-      decoration: ShapeDecoration(
-        color: containerColor,
-        shape: RoundedRectangleBorder(
-          side: BorderSide(width: 2, color: color),
-          borderRadius: BorderRadius.circular(14),
+  Widget _buildCategoryButton(
+    String name,
+    bool isSelected,
+    VoidCallback onTap,
+  ) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      decoration: BoxDecoration(
+        color: isSelected
+            ? AppColors.borderColor.withOpacity(0.6) // 60% opacity for selected
+            : Colors.white, // White background for unselected
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: isSelected
+              ? AppColors.borderColor
+                  .withOpacity(0.8) // 80% opacity for selected
+              : Colors.white, // White border for unselected
+          width: 1,
         ),
+        boxShadow: !isSelected
+            ? [
+                BoxShadow(
+                  color: AppColors.borderColor.withOpacity(0.35),
+                  offset: Offset(0, 0), // x = 0, y = 0
+                  blurRadius: 10, // Adjust for desired shadow softness
+                ),
+              ]
+            : [],
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
-        onTap: onTap, // Handle tap event
+        onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           child: CustomText(
-            color: color,
+            color: isSelected ? Colors.white : AppColors.borderColor,
             text: name,
-            fontSize: 24,
+            fontSize: 16,
             alignment: Alignment.center,
-            fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.w700,
           ),
         ),
       ),
     );
   }
+}
+
+class CategoryController extends GetxController {}
+
+class CategoryModel {
+  final String name;
+
+  CategoryModel({
+    required this.name,
+  });
 }

@@ -1,10 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:test_app/core/widget/app_color.dart';
+import 'package:test_app/core/widget/custom_text.dart';
 
 class ProductItemCard extends StatelessWidget {
-  final String imageUrl;
+  final String imageUrl; // This will now refer to a local asset path
+  final String name;
   final String rating;
   final String price;
   final String currency;
@@ -13,6 +13,7 @@ class ProductItemCard extends StatelessWidget {
   const ProductItemCard({
     Key? key,
     required this.imageUrl,
+    required this.name,
     required this.rating,
     required this.price,
     this.currency = 'د.ع',
@@ -21,87 +22,121 @@ class ProductItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      child: SizedBox(
-        height: 200, // Set a fixed height for each card
-        width: (Get.width / 2) - 16,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: Stack(
+    return Container(
+      // margin: EdgeInsets.symmetric(horizontal: 10),
+      height: 236,
+      width: 170,
+      decoration: BoxDecoration(
+        color: AppColors.backgroundColor,
+        borderRadius: BorderRadius.circular(12),
+        // border: Border.all(
+        //   width: 0,
+        //   color: AppColors.borderColor.withOpacity(0.4),
+        // ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.borderColor.withOpacity(0.35),
+            offset: Offset(0, 0), // x = 0, y = 0
+            blurRadius: 10, // Adjust for desired shadow softness
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Stack(
             children: [
-              CachedNetworkImage(
-                imageUrl: imageUrl,
-                fit: BoxFit.cover,
-                width: double.infinity,
-                height: double.infinity,
-                placeholder: (context, url) => Shimmer.fromColors(
-                  baseColor: Colors.grey[300]!,
-                  highlightColor: Colors.grey[100]!,
-                  child: Container(
-                    width: double.infinity,
-                    height: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
-              ),
-              Positioned(
-                left: 8,
-                top: 8,
-                child: GestureDetector(
-                  onTap: onFavoriteTapped,
-                  child: const Icon(
-                    Icons.favorite_border,
-                    color: Colors.red,
-                    size: 24,
-                  ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.asset(
+                  imageUrl,
+                  height: 168,
+                  width: 170,
+                  fit: BoxFit.cover,
                 ),
               ),
-              Positioned(
-                left: 8,
-                bottom: 8,
-                child: Row(
-                  children: [
-                    Text(
-                      ' $rating',
-                      style: TextStyle(color: Colors.grey[600]),
-                    ),
-                    const SizedBox(width: 5),
-                    const Icon(
-                      Icons.star,
-                      color: Colors.amber,
-                      size: 18,
-                    ),
-                  ],
+              const Positioned(
+                top: 13,
+                right: 13,
+                child: Icon(
+                  Icons.favorite,
+                  color: AppColors.redColor,
                 ),
-              ),
-              Positioned(
-                right: 8,
-                bottom: 8,
-                child: Row(
-                  children: [
-                    Text(
-                      ' $price',
-                      style: TextStyle(color: Colors.grey[600]),
-                    ),
-                    const SizedBox(width: 5),
-                    Text(
-                      currency,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              )
             ],
           ),
-        ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            child: CustomText(
+              text: name,
+              color: AppColors.borderColor,
+              fontSize: 12,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: 10,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: [
+                    Row(
+                      children: [
+                        CustomText(
+                          text: 'DIQ',
+                          color: AppColors.secondaryColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                        ),
+                        CustomText(
+                          text: ' 29000',
+                          color: AppColors.secondaryColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        CustomText(
+                          text: 'DIQ',
+                          color: AppColors.grayColor,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                          textDecoration: TextDecoration.lineThrough,
+                        ),
+                        // const SizedBox(width: 3),
+                        CustomText(
+                          text: ' 29000',
+                          color: AppColors.grayColor,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                          textDecoration: TextDecoration.lineThrough,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.star,
+                      color: AppColors.secondaryColor,
+                    ),
+                    CustomText(
+                      text: '4.5',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          )
+        ],
       ),
     );
   }

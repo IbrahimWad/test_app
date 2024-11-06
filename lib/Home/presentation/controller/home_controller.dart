@@ -8,6 +8,8 @@ import 'package:test_app/Home/domain/usecase/get_catefory_usecase.dart';
 import 'package:test_app/Home/domain/usecase/get_popular_product_use_case.dart';
 import 'package:test_app/Home/domain/usecase/get_slides_use_case.dart';
 import 'package:test_app/Home/domain/usecase/product_for_you_use_case.dart';
+import 'package:test_app/Home/presentation/components/category_components.dart';
+import 'package:test_app/Home/presentation/components/shope_compnents.dart';
 import 'package:test_app/core/usecases/base_usecase.dart';
 import 'package:test_app/core/utils/enums.dart';
 
@@ -32,7 +34,7 @@ class HomeController extends GetxController {
   late ScrollController scrollController;
   // Data states
   final RxList<Slides> slides = <Slides>[].obs;
-  final RxList<Category> categories = <Category>[].obs;
+  // final RxList<Category> categories = <Category>[].obs;
   final RxList<PopularProduct> popularProducts = <PopularProduct>[].obs;
   final RxList<ProductsForYou> products = <ProductsForYou>[].obs;
 
@@ -52,11 +54,11 @@ class HomeController extends GetxController {
   int total = 0; // Total number of products (you should initialize this)
 
   // Selected category type
-  var selectedType = 1.obs; // Default to 1
+  //var selectedType = 1.obs; // Default to 1
 
-  void focusType(int type) {
-    selectedType.value = type; // Update selected type
-  }
+  // void focusType(int type) {
+  //   selectedType.value = type; // Update selected type
+  // }
 
   // Observable properties
   var totalPages = 0; // Total pages available
@@ -74,10 +76,10 @@ class HomeController extends GetxController {
 
   Future<void> getInitialData() async {
     await Future.wait([
-      getSlides(),
-      getCategory(),
-      getPopularProduct(),
-      getProductsForYou(1), // Start with page 1
+      //   getSlides(),
+      //   getCategory(),
+      //   getPopularProduct(),
+      //   getProductsForYou(1), // Start with page 1
     ]);
   }
 
@@ -102,16 +104,16 @@ class HomeController extends GetxController {
     });
   }
 
-  Future<void> getCategory() async {
-    final result = await getCategoryUseCase(const NoParameter());
-    result.fold((l) {
-      categoriesRequestState(RequestState.error);
-      categoryMessage('خطـــأ غير متوقع'); // Unexpected error
-    }, (r) {
-      categories.assignAll(r);
-      categoriesRequestState(RequestState.loaded);
-    });
-  }
+  // Future<void> getCategory() async {
+  //   final result = await getCategoryUseCase(const NoParameter());
+  //   result.fold((l) {
+  //     categoriesRequestState(RequestState.error);
+  //     categoryMessage('خطـــأ غير متوقع'); // Unexpected error
+  //   }, (r) {
+  //     categories.assignAll(r);
+  //     categoriesRequestState(RequestState.loaded);
+  //   });
+  // }
 
   Future<void> getPopularProduct() async {
     final result = await getPopularProductUseCase(const NoParameter());
@@ -174,5 +176,39 @@ class HomeController extends GetxController {
     scrollController.removeListener(_scrollListener);
     scrollController.dispose();
     super.onClose();
+  }
+
+  final _selectedShop = 1.obs;
+  int get selectedShop => _selectedShop.value;
+
+  final _shopes = [
+    ShopModel(name: 'ماك', imagePath: 'assets/images/mac.jpg'),
+    ShopModel(name: 'لوريال باريس', imagePath: 'assets/images/ss.png'),
+    ShopModel(name: 'ماك', imagePath: 'assets/images/mac.jpg'),
+    ShopModel(name: 'لوريال باريس', imagePath: 'assets/images/ss.png'),
+  ].obs;
+
+  List<ShopModel> get shopes => _shopes.toList();
+
+  void selectShop(int shop) {
+    print('selectShop called, shop: $shop');
+    _selectedShop.value = shop;
+  }
+
+  final _selectedType = 1.obs;
+  int get selectedType => _selectedType.value;
+
+  final _categories = [
+    CategoryModel(name: 'عطور'),
+    CategoryModel(name: 'العناية بالشعر'),
+    CategoryModel(name: 'الفساتين'),
+    CategoryModel(name: 'الكل'),
+  ].obs;
+
+  List<CategoryModel> get categories => _categories.toList();
+
+  void selectCategory(int type) {
+    print('selectCategory called, type: $type');
+    _selectedType.value = type;
   }
 }

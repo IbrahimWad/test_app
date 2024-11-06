@@ -6,6 +6,9 @@ class CustomText extends StatelessWidget {
   final Color color;
   final FontWeight fontWeight;
   final Alignment alignment;
+  final TextDecoration?
+      textDecoration; // Add the optional textDecoration parameter
+
   CustomText({
     super.key,
     required this.text,
@@ -13,6 +16,7 @@ class CustomText extends StatelessWidget {
     this.color = Colors.white,
     this.fontWeight = FontWeight.normal,
     this.alignment = Alignment.centerRight,
+    this.textDecoration, // Pass the textDecoration here
   });
 
   @override
@@ -25,6 +29,7 @@ class CustomText extends StatelessWidget {
           fontSize: fontSize,
           color: color,
           fontWeight: fontWeight,
+          decoration: textDecoration, // Apply the textDecoration
         ),
       ),
     );
